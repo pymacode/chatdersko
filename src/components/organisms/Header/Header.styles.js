@@ -6,7 +6,7 @@ export const HeaderWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: ${({ theme }) => theme.colors.grey};
+  background-color: ${({ theme }) => theme.colors.lightBlack};
 `;
 
 export const RightSide = styled.div`
