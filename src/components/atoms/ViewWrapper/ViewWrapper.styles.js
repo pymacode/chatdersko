@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-export const NewsSectionWrapper = styled.div`
+export const ViewWrapper = styled.div`
   width: 20%;
   height: auto;
   margin-top: 50px;
