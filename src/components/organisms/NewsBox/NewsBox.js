@@ -8,15 +8,12 @@ const NewsBox = ({ data }) => {
   return (
     <>
       {data.length > 0
-        ? data.map(({ id, title, content, image = null }) => (
+        ? data.map(({ id, title, content }) => (
             <ContentWrapper key={id}>
               <Title>{title}</Title>
               <NewsContent>
                 <p>{content}</p>
-                <div>
-                  {image ? <img src={image.url} alt="article img" /> : null}
-                  <ReadMoreButton>Read more</ReadMoreButton>
-                </div>
+                <ReadMoreButton data-key={id}>Read more</ReadMoreButton>
               </NewsContent>
             </ContentWrapper>
           ))

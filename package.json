@@ -9,6 +9,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
@@ -20,6 +21,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "server": "nodemon server/server.js",
     "stylelint-check": "stylelint-config-prettier-check"
   },
   "eslintConfig": {
@@ -51,11 +53,16 @@
     ]
   },
   "devDependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-react": "^7.24.0",
+    "express": "^4.17.1",
     "husky": "^7.0.1",
     "lint-staged": "^11.1.1",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.12",
     "prettier": "2.3.2"
   }
 }

@@ -5,14 +5,14 @@ import Header from 'components/organisms/Header/Header';
 import NewsSection from '../NewsSection/NewsSection';
 import FriendsList from '../FriendsList/FriendsList';
 
-const MainTemplate = ({ children }) => {
+const MainTemplate = ({ children, loggedUser }) => {
   return (
     <Wrapper>
-      <Header />
+      <Header loggedUser={loggedUser} />
       <Components>
         <NewsSection />
         {children}
-        <FriendsList />
+        <FriendsList loggedUser={loggedUser} />
       </Components>
     </Wrapper>
   );
@@ -22,4 +22,5 @@ export default MainTemplate;
 
 MainTemplate.propTypes = {
   children: PropTypes.any,
+  loggedUser: PropTypes.object,
 };

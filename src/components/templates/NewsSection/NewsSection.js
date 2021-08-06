@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { NewsSectionWrapper } from './NewsSection.styles';
+import { ViewWrapper } from 'components/atoms/ViewWrapper/ViewWrapper.styles';
 import NewsBox from 'components/organisms/NewsBox/NewsBox';
 import Title from 'components/atoms/Title/Title';
 const query = `{
@@ -37,7 +37,7 @@ const NewsSection = () => {
       });
   }, []);
   return (
-    <NewsSectionWrapper>
+    <ViewWrapper>
       <Title isBig>News</Title>
       {error ? (
         <Title>{error}</Title>
@@ -46,7 +46,7 @@ const NewsSection = () => {
       ) : (
         <Title>Loading...</Title>
       )}
-    </NewsSectionWrapper>
+    </ViewWrapper>
   );
 };
 

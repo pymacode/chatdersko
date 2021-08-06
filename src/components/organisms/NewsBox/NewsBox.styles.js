@@ -3,40 +3,32 @@ import styled from 'styled-components';
 
 export const ReadMoreButton = styled(RoundedButton)`
   font-size: ${({ theme }) => theme.fontSize.s};
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
 `;
 
 export const NewsContent = styled.div`
   width: 100%;
-  height: 90%;
+  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
-  position: relative;
+  justify-content: space-between;
+  flex-direction: column;
+  /* position: relative; */
 
   p {
-    width: 45%;
-    height: 100%;
+    width: 80%;
+    height: 80%;
     margin: 0;
+    padding: 5px;
     font-size: ${({ theme }) => theme.fontSize.m};
     color: ${({ theme }) => theme.colors.white};
     text-align: center;
   }
-  div {
-    width: 45%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-
-    button {
-      position: absolute;
-      bottom: 5px;
-    }
-    img {
-      width: 90px;
-      height: 90px;
-    }
+  button {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
   }
 `;
