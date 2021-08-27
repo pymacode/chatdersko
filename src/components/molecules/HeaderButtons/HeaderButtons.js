@@ -1,20 +1,17 @@
 import React from 'react';
 import CircleButton from 'components/atoms/CircleButton/CircleButton';
-import { ArrowDownward, MessageOutlined } from '@material-ui/icons';
+import { ExitToApp } from '@material-ui/icons';
 import { ButtonsWrapper } from './HeaderButtons.styles';
+import { useAuth } from 'hooks/useAuth';
 const HeaderButtons = () => {
+  const auth = useAuth();
   return (
     <ButtonsWrapper>
       <CircleButton>
-        <MessageOutlined />
-      </CircleButton>
-      <CircleButton>
-        <ArrowDownward />
+        <ExitToApp onClick={auth.signOut} />
       </CircleButton>
     </ButtonsWrapper>
   );
 };
 
 export default HeaderButtons;
-
-HeaderButtons.propTypes = {};

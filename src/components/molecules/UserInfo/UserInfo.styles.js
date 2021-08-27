@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const UserInfoWrapper = styled.div`
-  width: 80%;
+  width: ${({ isSmall }) => (isSmall ? '30%' : '80%')};
   height: 80px;
   display: flex;
   justify-content: space-evenly;
@@ -17,5 +17,7 @@ export const UserInfoWrapper = styled.div`
   div {
     position: absolute;
     left: 5px;
+    border: 3px solid;
+    border-color: ${({ isOnline }) => (isOnline ? 'green' : 'grey')};
   }
 `;

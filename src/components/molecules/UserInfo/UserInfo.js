@@ -4,11 +4,15 @@ import Label from 'components/atoms/Label/Label';
 import Circle from 'components/atoms/Circle/Circle';
 import { UserInfoWrapper } from './UserInfo.styles';
 
-const UserInfo = ({ loggedUser }) => {
+const UserInfo = ({ user = {}, onClick, isSmall }) => {
   return (
-    <UserInfoWrapper>
+    <UserInfoWrapper
+      onClick={onClick}
+      isSmall={isSmall}
+      isOnline={user.isOnline}
+    >
       <Circle />
-      <Label>{`${loggedUser.name} ${loggedUser.surname} `}</Label>
+      <Label>{`${user.name} ${user.surname} `}</Label>
     </UserInfoWrapper>
   );
 };
@@ -16,5 +20,7 @@ const UserInfo = ({ loggedUser }) => {
 export default UserInfo;
 
 UserInfo.propTypes = {
-  loggedUser: PropTypes.object,
+  user: PropTypes.object,
+  onClick: PropTypes.func,
+  isSmall: PropTypes.bool,
 };
