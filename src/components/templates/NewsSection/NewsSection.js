@@ -30,7 +30,7 @@ const NewsSection = () => {
         }
       )
       .then(({ data: { data } }) => {
-        setTimeout(() => setArticles(data.allNews), 3000);
+        setArticles(data.allNews);
       })
       .catch(() => {
         setError('Failed while loading!');

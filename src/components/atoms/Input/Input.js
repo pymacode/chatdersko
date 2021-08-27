@@ -2,16 +2,25 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StyledInput } from './Input.styles';
 
-const Input = ({ name, id, type = 'text' }) => {
-  return (
-    <StyledInput
-      name={name}
-      id={id}
-      type={type}
-      placeholder="Szukaj znajomego"
-    />
-  );
-};
+const Input = React.forwardRef(
+  (
+    { name, id, type = 'text', placeholder = 'Szukaj znajomego', ...props },
+    ref
+  ) => {
+    return (
+      <StyledInput
+        name={name}
+        id={id}
+        type={type}
+        placeholder={placeholder}
+        autoComplete="OFF"
+        {...props}
+      />
+    );
+  }
+);
+
+Input.displayName = 'Input';
 
 export default Input;
 
@@ -19,4 +28,5 @@ Input.propTypes = {
   name: PropTypes.string,
   id: PropTypes.string,
   type: PropTypes.string,
+  placeholder: PropTypes.string,
 };

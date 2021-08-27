@@ -1,16 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import SearchBar from 'components/molecules/SearchBar/SearchBar';
 import HeaderButtons from 'components/molecules/HeaderButtons/HeaderButtons';
 import UserInfo from 'components/molecules/UserInfo/UserInfo';
 import { HeaderWrapper, RightSide } from './Header.styles';
+import { useAuth } from 'hooks/useAuth';
+import { NavLink } from 'react-router-dom';
 
-const Header = ({ loggedUser }) => {
+const Header = () => {
+  const auth = useAuth();
   return (
     <HeaderWrapper>
       <SearchBar />
+
+      <NavLink to="/">Home</NavLink>
+      <NavLink to="/chat">Chat</NavLink>
+
       <RightSide>
-        <UserInfo loggedUser={loggedUser} />
+        <UserInfo user={auth.user} />
         <HeaderButtons />
       </RightSide>
     </HeaderWrapper>
@@ -18,7 +24,3 @@ const Header = ({ loggedUser }) => {
 };
 
 export default Header;
-
-Header.propTypes = {
-  loggedUser: PropTypes.object,
-};
