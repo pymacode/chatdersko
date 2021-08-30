@@ -8,6 +8,7 @@ const query = `{
       id
       title
       content
+      category
       image {
         url
       }

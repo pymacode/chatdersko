@@ -4,7 +4,7 @@ export const TitleText = styled.h1`
   width: 100%;
   text-align: center;
   margin: 0;
-  color: ${({ theme }) => theme.colors.darkWhite};
+  color: ${({ theme }) => theme.colors.black};
   font-weight: 700;
   font-size: ${({ isBig }) =>
     isBig

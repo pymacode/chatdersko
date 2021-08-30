@@ -3,13 +3,15 @@ import PropTypes from 'prop-types';
 import { Wrapper, Components } from './MainTemplate.styles';
 import Header from 'components/organisms/Header/Header';
 import NewsSection from '../NewsSection/NewsSection';
+import Navigation from 'components/organisms/Navigation/Navigation';
 const MainTemplate = ({ children }) => {
   return (
     <Wrapper>
       <Header />
+      <Navigation />
       <Components>
-        <NewsSection />
         {children}
+        <NewsSection />
       </Components>
     </Wrapper>
   );

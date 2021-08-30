@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-  width: 260px;
-  height: 160px;
+  width: 80%;
+  min-height: 160px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,5 +12,5 @@ export const Wrapper = styled.div`
 
   margin-top: 10px;
 
-  background-color: ${({ theme }) => theme.colors.chatBoxBackground};
+  background-color: ${({ theme }) => theme.colors.white};
 `;

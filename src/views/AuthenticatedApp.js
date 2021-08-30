@@ -11,7 +11,7 @@ const AuthenticatedApp = () => {
           <Messages text="chat" />
         </Route>
         <Route path="/">
-          <Messages text="posts" />
+          <h1>You are at /</h1>
         </Route>
       </Switch>
     </MainTemplate>

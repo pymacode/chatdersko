@@ -5,11 +5,13 @@ export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: ${({ theme }) => theme.colors.black};
+  background-color: ${({ theme }) => theme.colors.default};
 `;
 
 export const Components = styled.div`
-  width: 100%;
+  position: relative;
+  width: calc(100% - 200px);
+  margin-left: 200px;
   height: 100%;
   display: flex;
   justify-content: space-between;
