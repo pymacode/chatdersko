@@ -1,6 +1,15 @@
 # Real time chat app with private messages.
 
-Project created with Create React App.
+Project created with Create React App while learning React.
+Used methods and libaries:
+- Styled components
+- React Context
+- React hooks (useForm etc.) + couple of self written.
+- Redux + redux/toolkit
+- Axios
+- Dato CMS
+- MySQL DB + NodeJS server
+- and more...
 
 
 # After git clone
@@ -18,6 +27,8 @@ That's how you run this app, also you can check this out live under : 'link to l
 ### `npm run server`
 
 You need server to get data from DB.
+
+( link to mysql db exported file )
 
 ### `npm test`
 
