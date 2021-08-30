@@ -4,10 +4,28 @@ import { StyledInput } from './Input.styles';
 
 const Input = React.forwardRef(
   (
-    { name, id, type = 'text', placeholder = 'Szukaj znajomego', ...props },
+    {
+      isTextarea,
+      name,
+      id,
+      type = 'text',
+      placeholder = 'Szukaj znajomego',
+      ...props
+    },
     ref
-  ) => {
-    return (
+  ) =>
+    isTextarea ? (
+      <StyledInput
+        isTextarea={isTextarea}
+        as="textarea"
+        name={name}
+        id={id}
+        type={type}
+        placeholder={placeholder}
+        autoComplete="OFF"
+        {...props}
+      />
+    ) : (
       <StyledInput
         name={name}
         id={id}
@@ -16,8 +34,7 @@ const Input = React.forwardRef(
         autoComplete="OFF"
         {...props}
       />
-    );
-  }
+    )
 );
 
 Input.displayName = 'Input';
@@ -29,4 +46,5 @@ Input.propTypes = {
   id: PropTypes.string,
   type: PropTypes.string,
   placeholder: PropTypes.string,
+  isTextarea: PropTypes.bool,
 };

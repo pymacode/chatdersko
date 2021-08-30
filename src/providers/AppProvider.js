@@ -6,18 +6,25 @@ import { ThemeProvider } from 'styled-components';
 import { AuthProvider } from 'hooks/useAuth';
 import { SocketProvider } from 'hooks/useSocket';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { MessagesProvider } from 'hooks/useMessages';
+import { store } from 'store';
+import { Provider } from 'react-redux';
 const AppProvider = ({ children }) => {
   return (
-    <Router>
-      <ThemeProvider theme={theme}>
-        <SocketProvider>
-          <AuthProvider>
-            <GlobalStyle />
-            {children}
-          </AuthProvider>
-        </SocketProvider>
-      </ThemeProvider>
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <ThemeProvider theme={theme}>
+          <MessagesProvider>
+            <SocketProvider>
+              <AuthProvider>
+                <GlobalStyle />
+                {children}
+              </AuthProvider>
+            </SocketProvider>
+          </MessagesProvider>
+        </ThemeProvider>
+      </Router>
+    </Provider>
   );
 };
 

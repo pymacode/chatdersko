@@ -7,12 +7,13 @@ export const SearchBarWrapper = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
+  margin-left: 15px;
 
   svg {
     position: absolute;
-    left: 16px;
+    left: 6px;
     width: 36px;
     height: 36px;
-    color: ${({ theme }) => theme.colors.grey};
+    color: ${({ theme }) => theme.colors.darkGrey};
   }
 `;

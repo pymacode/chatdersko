@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 export const ViewWrapper = styled.div`
-  width: 20%;
+  width: 25%;
   height: auto;
-  margin-top: 50px;
+  padding-top: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-left: 1px solid grey;
 `;

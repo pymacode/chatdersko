@@ -5,7 +5,7 @@ const httpServer = require('http').createServer(app);
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const { default: axios } = require('axios');
-require('dotenv').config({ path: 'server/.env' });
+require('dotenv').config({ path: '.env' });
 
 const activeUsers = [];
 
@@ -18,7 +18,6 @@ const io = require('socket.io')(httpServer, {
 const corsSetting = {
   origin: 'http://localhost:3000',
 };
-
 const connection = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
