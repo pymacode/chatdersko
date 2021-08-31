@@ -1,15 +1,19 @@
-import { useMessages } from 'hooks/useMessages';
+import { useAuth } from 'hooks/useAuth';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useGetMessagesMutation } from 'store';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 const ChatBoxMessages = styled.div`
   width: 100%;
-  max-height: 80%;
+  height: 90%;
   padding-top: 10px;
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid ${({ theme }) => theme.colors.lightBlack};
+  border-right: 3px solid ${({ theme }) => theme.colors.white};
   overflow-y: scroll;
+  background-color: ${({ theme }) => theme.colors.default};
 
   //hide scrollbar
   &::-webkit-scrollbar {
@@ -27,8 +31,9 @@ const MessageBox = styled.div`
   border-radius: 15px;
   padding: 5px 10px;
   background-color: ${({ theme, isSender }) =>
-    isSender ? theme.colors.grey : theme.colors.lightGrey};
-  color: ${({ theme }) => theme.colors.white};
+    isSender ? theme.colors.black : theme.colors.white};
+  color: ${({ theme, isSender }) =>
+    isSender ? theme.colors.white : theme.colors.black};
   margin: 5px 15px;
   align-self: ${({ isSender }) => (isSender ? 'flex-end' : 'flex-start')};
 `;
@@ -38,12 +43,35 @@ const Message = ({ children, isSender }) => {
 };
 
 const ChatMessages = () => {
-  const { messages, user } = useMessages();
+  const [messages, setMessages] = React.useState([]);
+  const { activeFriend } = useSelector((state) => state.friends);
+  const auth = useAuth();
+  const [getMessages] = useGetMessagesMutation();
+  React.useEffect(async () => {
+    try {
+      if (!activeFriend) return;
+      const { data } = await getMessages({
+        userID: auth.user.id,
+        friendID: activeFriend.id,
+      });
+      if (data.length > 0) {
+        setMessages(JSON.parse(data[0].messages));
+      } else {
+        setMessages([]);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+
+    return () => {
+      setMessages([]);
+    };
+  }, [activeFriend]);
   return (
     <ChatBoxMessages>
       {messages.length > 0 ? (
         messages.map((message) => {
-          if (message.senderID === user.id) {
+          if (message.senderID === auth.user.id) {
             return (
               <Message key={message.id} isSender>
                 {message.content}

@@ -1,5 +1,4 @@
 import FriendsListBox from 'components/atoms/FriendsListBox/FriendsListBox';
-import { useMessages } from 'hooks/useMessages';
 import React from 'react';
 import styled from 'styled-components';
 const FriendsListWrapper = styled.div`

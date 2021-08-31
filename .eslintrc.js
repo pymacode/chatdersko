@@ -14,5 +14,6 @@ module.exports = {
   plugins: ['react'],
   rules: {
     quotes: ['error', 'single'],
+    'react/prop-types': 'off',
   },
 };

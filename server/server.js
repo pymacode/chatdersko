@@ -75,7 +75,7 @@ app.post('/update-user', (req, res) => {
 });
 
 app.post('/messages', (req, res) => {
-  if (!req.body.userID || !req.body.friendID) return;
+  if (!req.body.userID) return;
   const query = `SELECT * FROM messages WHERE (userID='${req.body.userID}' || userID='${req.body.friendID}') && (friendID='${req.body.friendID}' || friendID='${req.body.userID}')`;
   connection.query(query, (err, result) => {
     if (err) throw new Error(err);

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { useSocket } from './useSocket';
+import { useDispatch } from 'react-redux';
+import { clearState } from 'store';
 const AuthContext = React.createContext({});
 
 export const AuthProvider = ({ children }) => {
@@ -9,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const token = sessionStorage.getItem('token');
   const userID = sessionStorage.getItem('userID');
   const { socket } = useSocket();
+  const dispatch = useDispatch();
   useEffect(() => {
     if (!token || !userID) return;
     (async () => {
@@ -50,6 +53,7 @@ export const AuthProvider = ({ children }) => {
       })
       .then(() => {
         setUser(null);
+        dispatch(clearState({ friends: [], activeFriend: null }));
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('userID');
       });

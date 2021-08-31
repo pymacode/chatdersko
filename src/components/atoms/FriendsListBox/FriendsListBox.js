@@ -1,8 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { useMessages } from 'hooks/useMessages';
 import UserInfo from 'components/molecules/UserInfo/UserInfo';
+import { useAuth } from 'hooks/useAuth';
+import { useGetFriendsMutation } from 'store';
+import { useSelector, useDispatch } from 'react-redux';
+import { addFriends, setActiveFriend } from 'store';
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -13,8 +16,8 @@ const Wrapper = styled.div`
 `;
 const SingleFriend = styled.div`
   width: 90%;
-  min-height: 100px;
-  background-color: ${({ theme }) => theme.colors.lightGrey};
+  min-height: 50px;
+  background-color: ${({ theme }) => theme.colors.default};
   margin-bottom: 10px;
   border-radius: 15px;
 
@@ -30,22 +33,35 @@ const LastMessage = styled.div`
 `;
 
 const FriendsListBox = () => {
-  const { changeUser, friends } = useMessages();
-  const { messages } = useMessages();
+  const {
+    user: { id },
+  } = useAuth();
+  const [getFriends] = useGetFriendsMutation();
+  const { friends } = useSelector((state) => state.friends);
+  const dispatch = useDispatch();
 
-  const handleUserChange = (id) => {
-    changeUser(id);
+  React.useEffect(async () => {
+    try {
+      const { data } = await getFriends({ id });
+      dispatch(addFriends(data));
+    } catch (e) {
+      console.log(e);
+    }
+
+    return () => {
+      dispatch(addFriends([]));
+    };
+  }, []);
+
+  const handleUserChange = (friend) => {
+    dispatch(setActiveFriend(friend));
   };
   return (
     <Wrapper>
       {friends.length > 0 ? (
         friends.map((friend) => (
           <SingleFriend key={friend.id}>
-            <UserInfo
-              user={friend}
-              onClick={() => handleUserChange(friend.id)}
-            />
-            <LastMessage>last message</LastMessage>
+            <UserInfo user={friend} onClick={() => handleUserChange(friend)} />
           </SingleFriend>
         ))
       ) : (

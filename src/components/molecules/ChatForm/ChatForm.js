@@ -1,19 +1,19 @@
 import { Send } from '@material-ui/icons';
-import Input from 'components/atoms/Input/Input';
 import React from 'react';
 import styled from 'styled-components';
 import { StyledInput } from 'components/atoms/Input/Input.styles';
 const ChatBoxForm = styled.form`
   width: 100%;
-  height: 20%;
+  height: 10%;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 const ChatMessageTextarea = styled(StyledInput)`
   height: 80%;
-  width: 50%;
+  width: 80%;
   resize: none;
+  border-radius: 5px;
   background-color: ${({ theme }) => theme.colors.grey};
   color: ${({ theme }) => theme.colors.white};
   &::placeholder {
@@ -27,15 +27,10 @@ const ChatMessageTextarea = styled(StyledInput)`
     color: ${({ theme }) => theme.colors.white};
   }
 `;
-const SendButton = styled.button`
-  width: 100px;
-  height: 30px;
+
+const StyledSendIcon = styled(Send)`
+  color: ${({ theme }) => theme.colors.purple};
   margin-left: 30px;
-  border: none;
-  border-radius: 15px;
-  outline: none;
-  background-color: ${({ theme }) => theme.colors.default};
-  color: ${({ theme }) => theme.colors.black};
 `;
 const ChatForm = () => {
   return (
@@ -44,9 +39,9 @@ const ChatForm = () => {
         as="textarea"
         name="message"
         id="message"
-        placeholder="Wiadmość..."
+        placeholder="Type message..."
       />
-      <SendButton>Send</SendButton>
+      <StyledSendIcon onClick={() => console.log('xD')} />
     </ChatBoxForm>
   );
 };
