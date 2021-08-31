@@ -1,25 +1,45 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { io } from 'socket.io-client';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateMessages } from 'store';
 
 const SocketContext = React.createContext({});
 
 export const SocketProvider = ({ children }) => {
   const socket = io('http://localhost:6060');
-
-  const sendMessage = (message) => {
-    socket.emit('msg', message);
-  };
-
-  const updateMessage = (updateMessages) => {
-    socket.on('newmsg', (data) => {
-      updateMessages(data);
-      console.log('getting message');
+  const messages = useSelector((state) => state.messages);
+  const { activeFriend } = useSelector((state) => state.friends);
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const sendMessage = ({ message }, e) => {
+    socket.emit('msg', {
+      sender: user.id,
+      reciever: activeFriend.id,
+      message,
     });
+    dispatch(
+      updateMessages({
+        senderID: user.id,
+        content: message,
+      })
+    );
+    e.target.reset();
   };
+
+  socket.on('newmsg', (data) => {
+    console.log(data);
+    dispatch(
+      updateMessages({
+        senderID: data.sender,
+        content: data.message,
+      })
+    );
+  });
+  // TODO -> Save messages to DataBase after recive. ( server or client side - think about it);
 
   return (
-    <SocketContext.Provider value={{ socket, sendMessage, updateMessage }}>
+    <SocketContext.Provider value={{ socket, sendMessage }}>
       {children}
     </SocketContext.Provider>
   );

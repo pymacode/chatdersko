@@ -2,8 +2,9 @@ import { useAuth } from 'hooks/useAuth';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useGetMessagesMutation } from 'store';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { addMessages } from 'store';
 const ChatBoxMessages = styled.div`
   width: 100%;
   height: 90%;
@@ -43,10 +44,12 @@ const Message = ({ children, isSender }) => {
 };
 
 const ChatMessages = () => {
-  const [messages, setMessages] = React.useState([]);
+  const messages = useSelector((state) => state.messages);
   const { activeFriend } = useSelector((state) => state.friends);
   const auth = useAuth();
   const [getMessages] = useGetMessagesMutation();
+  const dispatch = useDispatch();
+
   React.useEffect(async () => {
     try {
       if (!activeFriend) return;
@@ -55,16 +58,16 @@ const ChatMessages = () => {
         friendID: activeFriend.id,
       });
       if (data.length > 0) {
-        setMessages(JSON.parse(data[0].messages));
+        dispatch(addMessages(JSON.parse(data[0].messages)));
       } else {
-        setMessages([]);
+        dispatch(addMessages([]));
       }
     } catch (e) {
       console.log(e);
     }
 
     return () => {
-      setMessages([]);
+      dispatch(addMessages([]));
     };
   }, [activeFriend]);
   return (

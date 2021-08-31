@@ -40,12 +40,15 @@ io.on('connection', (socket) => {
   });
 
   socket.on('msg', (data) => {
+    console.log(data);
     const query = `SELECT users.socket FROM users WHERE id='${data.reciever}'`;
     connection.query(query, (err, result) => {
       if (err) return new Error(err);
       console.log(result[0].socket);
       socket.to(result[0].socket).emit('newmsg', data);
     });
+    // console.log(data);
+    // socket.emit('newmsg', data);
   });
 });
 
