@@ -2,12 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { useSocket } from './useSocket';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearState } from 'store';
+import { setUser, removeUser } from 'store';
 const AuthContext = React.createContext({});
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.user);
   const token = sessionStorage.getItem('token');
   const userID = sessionStorage.getItem('userID');
   const { socket } = useSocket();
@@ -19,7 +21,7 @@ export const AuthProvider = ({ children }) => {
         const response = await axios.post('http://localhost:6060/user', {
           id: `${userID}`,
         });
-        setUser(response.data[0]);
+        dispatch(setUser(response.data[0]));
         socket.emit('user-refresh', response.data[0]);
       } catch (e) {
         console.log(e);
@@ -32,7 +34,7 @@ export const AuthProvider = ({ children }) => {
         email,
         password,
       });
-      setUser(response.data[0]);
+      dispatch(setUser(response.data[0]));
       sessionStorage.setItem('token', response.data[0].token);
       sessionStorage.setItem('userID', response.data[0].id);
       axios.post('http://localhost:6060/update-user', {
@@ -52,7 +54,7 @@ export const AuthProvider = ({ children }) => {
         socket: 'null',
       })
       .then(() => {
-        setUser(null);
+        dispatch(removeUser());
         dispatch(clearState({ friends: [], activeFriend: null }));
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('userID');
