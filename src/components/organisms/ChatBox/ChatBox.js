@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ChatHeader from 'components/molecules/ChatHeader/ChatHeader';
 import ChatForm from 'components/molecules/ChatForm/ChatForm';
 import ChatMessages from 'components/molecules/ChatMessages/ChatMessages';
-import { useMessages } from 'hooks/useMessages';
+import { useSelector } from 'react-redux';
 
 const ChatBoxWrapper = styled.div`
   width: 70%;
@@ -13,10 +13,10 @@ const ChatBoxWrapper = styled.div`
 `;
 
 export const ChatBox = () => {
-  const { user } = useMessages();
+  const { activeFriend } = useSelector((state) => state.friends);
   return (
     <>
-      {user ? (
+      {activeFriend ? (
         <ChatBoxWrapper>
           <ChatHeader />
           <ChatMessages />

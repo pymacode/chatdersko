@@ -6,7 +6,6 @@ import { ThemeProvider } from 'styled-components';
 import { AuthProvider } from 'hooks/useAuth';
 import { SocketProvider } from 'hooks/useSocket';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { MessagesProvider } from 'hooks/useMessages';
 import { store } from 'store';
 import { Provider } from 'react-redux';
 const AppProvider = ({ children }) => {
@@ -14,14 +13,12 @@ const AppProvider = ({ children }) => {
     <Provider store={store}>
       <Router>
         <ThemeProvider theme={theme}>
-          <MessagesProvider>
-            <SocketProvider>
-              <AuthProvider>
-                <GlobalStyle />
-                {children}
-              </AuthProvider>
-            </SocketProvider>
-          </MessagesProvider>
+          <SocketProvider>
+            <AuthProvider>
+              <GlobalStyle />
+              {children}
+            </AuthProvider>
+          </SocketProvider>
         </ThemeProvider>
       </Router>
     </Provider>

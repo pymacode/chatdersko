@@ -5,7 +5,6 @@ import Circle from 'components/atoms/Circle/Circle';
 import { UserInfoWrapper } from './UserInfo.styles';
 
 const UserInfo = ({ user = {}, onClick, isSmall }) => {
-  console.log(user);
   return (
     <UserInfoWrapper onClick={onClick} isSmall={isSmall} isOnline={false}>
       <Circle />

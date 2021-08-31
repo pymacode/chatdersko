@@ -8,9 +8,6 @@ import { useAuth } from 'hooks/useAuth';
 
 const FriendsList = () => {
   const [friends, setFriends] = useState([]);
-  const [firstModal, setFirstModal] = useState(false);
-  const [secondModal, setSecondModal] = useState(false);
-  const [thirdModal, setThirdModal] = useState(false);
   const auth = useAuth();
   useEffect(() => {
     axios

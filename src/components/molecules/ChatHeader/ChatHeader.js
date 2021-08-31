@@ -1,7 +1,7 @@
-import { useMessages } from 'hooks/useMessages';
 import React from 'react';
 import styled from 'styled-components';
 import UserInfo from '../UserInfo/UserInfo';
+import { useSelector } from 'react-redux';
 const ChatBoxHeader = styled.div`
   width: 100%;
   height: 80px;
@@ -9,10 +9,10 @@ const ChatBoxHeader = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.colors.lightBlack};
 `;
 const ChatHeader = () => {
-  const { user } = useMessages();
+  const { activeFriend } = useSelector((state) => state.friends);
   return (
     <ChatBoxHeader>
-      {user ? <UserInfo user={user} /> : <h1>Select friend</h1>}
+      {activeFriend ? <UserInfo user={activeFriend} /> : <h1>Select friend</h1>}
     </ChatBoxHeader>
   );
 };
