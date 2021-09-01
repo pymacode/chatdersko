@@ -52,7 +52,6 @@ io.on('connection', (socket) => {
 
 app.post('/save-messages', (req, res) => {
   if (!req.body) return;
-  console.log(req.body);
   const query = `UPDATE messages SET messages='${req.body.messages}' WHERE (userID=${req.body.userID} && friendID=${req.body.friendID}) || (userID=${req.body.friendID} && friendID=${req.body.userID})`;
   connection.query(query, (err, result) => {
     if (err) return new Error(err);

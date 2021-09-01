@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { io } from 'socket.io-client';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateMessages } from 'store';
-import { useSaveMessagesMutation } from 'store';
+import { updateMessages, setUnreadMessage } from 'store';
+import { useSaveMessagesMutation, store } from 'store';
 
 const SocketContext = React.createContext({});
 
@@ -15,6 +15,21 @@ export const SocketProvider = ({ children }) => {
   const dispatch = useDispatch();
   const [saveMessages] = useSaveMessagesMutation();
 
+  socket.on('newmsg', (data) => {
+    const aFriend = store.getState().friends.activeFriend;
+    if (aFriend && aFriend.id === data.sender) {
+      dispatch(
+        updateMessages({
+          senderID: data.sender,
+          content: data.message,
+        })
+      );
+      scrollDown();
+    } else {
+      dispatch(setUnreadMessage({ from: data.sender }));
+    }
+  });
+
   const scrollDown = () => {
     const element = document.querySelector('.messages');
     if (element) {
@@ -25,14 +40,15 @@ export const SocketProvider = ({ children }) => {
   };
 
   const sendMessage = ({ message }, e) => {
-    saveMessages({
-      userID: user.id,
-      friendID: activeFriend.id,
-      messages: JSON.stringify([
-        ...messages,
-        { id: messages.length + 1, senderID: user.id, content: message },
-      ]),
-    });
+    // FIXME Uncomment to save messages to DB
+    // saveMessages({
+    //   userID: user.id,
+    //   friendID: activeFriend.id,
+    //   messages: JSON.stringify([
+    //     ...messages,
+    //     { id: messages.length + 1, senderID: user.id, content: message },
+    //   ]),
+    // });
     socket.emit('msg', {
       sender: user.id,
       reciever: activeFriend.id,
@@ -47,17 +63,6 @@ export const SocketProvider = ({ children }) => {
     scrollDown();
     e.target.reset();
   };
-
-  socket.on('newmsg', (data) => {
-    dispatch(
-      updateMessages({
-        senderID: data.sender,
-        content: data.message,
-      })
-    );
-    scrollDown();
-  });
-  // TODO -> Save messages to DataBase after recive. ( server or client side - think about it);
 
   return (
     <SocketContext.Provider value={{ socket, sendMessage, scrollDown }}>

@@ -6,7 +6,11 @@ import { UserInfoWrapper } from './UserInfo.styles';
 
 const UserInfo = ({ user = {}, onClick, isSmall }) => {
   return (
-    <UserInfoWrapper onClick={onClick} isSmall={isSmall} isOnline={false}>
+    <UserInfoWrapper
+      onClick={onClick}
+      isSmall={isSmall}
+      isOnline={user.isOnline}
+    >
       <Circle />
       <Label>{`${user.name} ${user.surname} `}</Label>
     </UserInfoWrapper>

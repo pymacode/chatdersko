@@ -5,7 +5,9 @@ import UserInfo from 'components/molecules/UserInfo/UserInfo';
 import { useAuth } from 'hooks/useAuth';
 import { useGetFriendsMutation } from 'store';
 import { useSelector, useDispatch } from 'react-redux';
-import { addFriends, setActiveFriend } from 'store';
+import { addFriends, setActiveFriend, store } from 'store';
+import { useSocket } from 'hooks/useSocket';
+import { removeUnreadMessage } from 'store';
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -20,16 +22,22 @@ const SingleFriend = styled.div`
   background-color: ${({ theme }) => theme.colors.default};
   margin-bottom: 10px;
   border-radius: 15px;
-
+  display: flex;
+  align-items: center;
   &:first-of-type {
     margin-top: 10px;
   }
 `;
-const LastMessage = styled.div`
-  width: 100%;
-  padding-left: 15px;
-  font-size: ${({ theme }) => theme.fontSize.m};
+const UnreadMessages = styled.div`
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  border-radius: 50%;
+  background-color: red;
   color: ${({ theme }) => theme.colors.black};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const FriendsListBox = () => {
@@ -47,21 +55,30 @@ const FriendsListBox = () => {
     } catch (e) {
       console.log(e);
     }
-
     return () => {
       dispatch(addFriends([]));
     };
   }, []);
+  const unreadMessages = useSelector((state) => state.unreadMessages);
 
-  const handleUserChange = (friend) => {
-    dispatch(setActiveFriend(friend));
-  };
   return (
     <Wrapper>
       {friends.length > 0 ? (
         friends.map((friend) => (
           <SingleFriend key={friend.id}>
-            <UserInfo user={friend} onClick={() => handleUserChange(friend)} />
+            <UserInfo
+              user={friend}
+              onClick={() => {
+                dispatch(setActiveFriend(friend));
+                dispatch(removeUnreadMessage(friend.id));
+              }}
+            />
+            {unreadMessages.length > 0 &&
+            unreadMessages[0].from == friend.id ? (
+              <UnreadMessages>
+                {unreadMessages.filter((x) => x.from == friend.id).length}
+              </UnreadMessages>
+            ) : null}
           </SingleFriend>
         ))
       ) : (
