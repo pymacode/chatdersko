@@ -7,9 +7,11 @@ import styled from 'styled-components';
 import { addMessages } from 'store';
 const ChatBoxMessages = styled.div`
   width: 100%;
-  height: 90%;
+  height: 80%;
+  max-height: 700px;
   padding-top: 10px;
   display: flex;
+  box-sizing: border-box;
   flex-direction: column;
   border-bottom: 1px solid ${({ theme }) => theme.colors.lightBlack};
   border-right: 3px solid ${({ theme }) => theme.colors.white};
@@ -71,7 +73,7 @@ const ChatMessages = () => {
     };
   }, [activeFriend]);
   return (
-    <ChatBoxMessages>
+    <ChatBoxMessages className="messages">
       {messages.length > 0 ? (
         messages.map((message) => {
           if (message.senderID === auth.user.id) {

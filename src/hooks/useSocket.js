@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { io } from 'socket.io-client';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateMessages } from 'store';
+import { useSaveMessagesMutation } from 'store';
 
 const SocketContext = React.createContext({});
 
@@ -12,7 +13,26 @@ export const SocketProvider = ({ children }) => {
   const { activeFriend } = useSelector((state) => state.friends);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [saveMessages] = useSaveMessagesMutation();
+
+  const scrollDown = () => {
+    const element = document.querySelector('.messages');
+    if (element) {
+      setTimeout(() => {
+        element.scrollTop = element.scrollHeight;
+      }, 100);
+    }
+  };
+
   const sendMessage = ({ message }, e) => {
+    saveMessages({
+      userID: user.id,
+      friendID: activeFriend.id,
+      messages: JSON.stringify([
+        ...messages,
+        { id: messages.length + 1, senderID: user.id, content: message },
+      ]),
+    });
     socket.emit('msg', {
       sender: user.id,
       reciever: activeFriend.id,
@@ -24,22 +44,23 @@ export const SocketProvider = ({ children }) => {
         content: message,
       })
     );
+    scrollDown();
     e.target.reset();
   };
 
   socket.on('newmsg', (data) => {
-    console.log(data);
     dispatch(
       updateMessages({
         senderID: data.sender,
         content: data.message,
       })
     );
+    scrollDown();
   });
   // TODO -> Save messages to DataBase after recive. ( server or client side - think about it);
 
   return (
-    <SocketContext.Provider value={{ socket, sendMessage }}>
+    <SocketContext.Provider value={{ socket, sendMessage, scrollDown }}>
       {children}
     </SocketContext.Provider>
   );

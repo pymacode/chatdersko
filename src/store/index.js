@@ -19,6 +19,13 @@ const massagingSystemApi = createApi({
       }),
       providesTags: ['Messages'],
     }),
+    saveMessages: builder.mutation({
+      query: (body) => ({
+        url: 'save-messages',
+        method: 'POST',
+        body,
+      }),
+    }),
     getFriends: builder.mutation({
       query: (body) => ({
         url: 'friends',
@@ -94,8 +101,11 @@ export const { addFriends, setActiveFriend, clearState } = friendsSlice.actions;
 export const { addMessages, updateMessages } = messagesSlice.actions;
 export const { setUser, removeUser } = userSlice.actions;
 
-export const { useGetMessagesMutation, useGetFriendsMutation } =
-  massagingSystemApi;
+export const {
+  useGetMessagesMutation,
+  useGetFriendsMutation,
+  useSaveMessagesMutation,
+} = massagingSystemApi;
 
 export const store = configureStore({
   reducer: {
