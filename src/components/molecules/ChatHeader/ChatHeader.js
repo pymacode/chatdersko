@@ -4,7 +4,7 @@ import UserInfo from '../UserInfo/UserInfo';
 import { useSelector } from 'react-redux';
 const ChatBoxHeader = styled.div`
   width: 100%;
-  height: 80px;
+  height: 10%;
   display: flex;
   border-bottom: 1px solid ${({ theme }) => theme.colors.lightBlack};
 `;
