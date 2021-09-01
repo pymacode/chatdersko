@@ -84,6 +84,21 @@ const messagesSlice = createSlice({
   },
 });
 
+const unreadMessagesSlice = createSlice({
+  name: 'unreadMessages',
+  initialState: [],
+  reducers: {
+    setUnreadMessage: {
+      reducer: (state, action) => [...state, action.payload],
+    },
+    removeUnreadMessage: {
+      reducer: (state, action) => {
+        return state.filter((item) => item.from !== action.payload);
+      },
+    },
+  },
+});
+
 const userSlice = createSlice({
   name: 'user',
   initialState: null,
@@ -100,6 +115,8 @@ const userSlice = createSlice({
 export const { addFriends, setActiveFriend, clearState } = friendsSlice.actions;
 export const { addMessages, updateMessages } = messagesSlice.actions;
 export const { setUser, removeUser } = userSlice.actions;
+export const { setUnreadMessage, removeUnreadMessage } =
+  unreadMessagesSlice.actions;
 
 export const {
   useGetMessagesMutation,
@@ -113,6 +130,7 @@ export const store = configureStore({
     friends: friendsSlice.reducer,
     messages: messagesSlice.reducer,
     user: userSlice.reducer,
+    unreadMessages: unreadMessagesSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(massagingSystemApi.middleware),

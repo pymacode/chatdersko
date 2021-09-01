@@ -5,6 +5,7 @@ import { useGetMessagesMutation } from 'store';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { addMessages } from 'store';
+
 const ChatBoxMessages = styled.div`
   width: 100%;
   height: 80%;
@@ -72,6 +73,7 @@ const ChatMessages = () => {
       dispatch(addMessages([]));
     };
   }, [activeFriend]);
+
   return (
     <ChatBoxMessages className="messages">
       {messages.length > 0 ? (

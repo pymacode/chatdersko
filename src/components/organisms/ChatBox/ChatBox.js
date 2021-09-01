@@ -16,7 +16,8 @@ const ChatBoxWrapper = styled.div`
 
 export const ChatBox = () => {
   const { activeFriend } = useSelector((state) => state.friends);
-  const { scrollDown } = useSocket();
+  const { scrollDown, updateMess } = useSocket();
+
   React.useEffect(() => {
     scrollDown();
   }, [activeFriend]);
