@@ -1,13 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const path = require('path');
 const httpServer = require('http').createServer(app);
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const { default: axios } = require('axios');
 require('dotenv').config({ path: '.env' });
-
-const activeUsers = [];
 
 const io = require('socket.io')(httpServer, {
   cors: {
@@ -39,6 +38,10 @@ io.on('connection', (socket) => {
     });
   });
 
+  socket.on('user-closed-tab', (data) => {
+    console.log(data);
+  });
+
   socket.on('msg', (data) => {
     // console.log(data);
     const query = `SELECT users.socket FROM users WHERE id='${data.reciever}'`;
@@ -47,6 +50,30 @@ io.on('connection', (socket) => {
       // console.log(result[0].socket);
       socket.to(result[0].socket).emit('newmsg', data);
     });
+  });
+});
+
+app.get('/getImage/:id/:filename', (req, res) => {
+  const options = {
+    root: path.join(__dirname, 'public'),
+    dotfiles: 'deny',
+    headers: {
+      'x-timestamp': Date.now(),
+      'x-sent': true,
+    },
+  };
+  if (!req.params.id || !req.params.filename) return;
+  const query = `SELECT profileImageName FROM users WHERE id='${req.params.id}'`;
+  connection.query(query, (err, result) => {
+    if (err) return new Error(err);
+    if (
+      result.length === 0 ||
+      result[0].profileImageName !== req.params.filename
+    ) {
+      res.sendStatus(403);
+    } else {
+      res.sendFile(`/images/${req.params.id}/${req.params.filename}`, options);
+    }
   });
 });
 
@@ -86,7 +113,7 @@ app.post('/messages', (req, res) => {
 
 app.post('/login', (req, res) => {
   if (!req.body.email && !req.body.password) return;
-  const query = `SELECT id, name, surname FROM users WHERE email='${req.body.email}' && password='${req.body.password}'`;
+  const query = `SELECT id, name, surname, profileImageName FROM users WHERE email='${req.body.email}' && password='${req.body.password}'`;
   connection.query(query, (err, result) => {
     if (err) return new Error(err);
     if (result.length === 0) return new Error('No user');
@@ -97,7 +124,7 @@ app.post('/login', (req, res) => {
 
 app.post('/friends', (req, res) => {
   if (!req.body.id) return;
-  const query = `SELECT users.id, users.name, users.surname, users.isOnline, users.socket from users INNER JOIN friends on friends.userID WHERE (friends.userID = ${req.body.id} || friends.friendID = ${req.body.id} ) && (users.id = friends.friendID || users.id = friends.userID) && users.id != ${req.body.id} `;
+  const query = `SELECT users.id, users.name, users.surname, users.isOnline, users.socket, users.profileImageName from users INNER JOIN friends on friends.userID WHERE (friends.userID = ${req.body.id} || friends.friendID = ${req.body.id} ) && (users.id = friends.friendID || users.id = friends.userID) && users.id != ${req.body.id} `;
   connection.query(query, (err, result) => {
     if (err) return new Error(err);
     res.send(result);
@@ -106,7 +133,7 @@ app.post('/friends', (req, res) => {
 
 app.post('/user', (req, res) => {
   if (!req.body.id) return;
-  const query = `SELECT id, name, surname FROM users WHERE id = ${req.body.id}`;
+  const query = `SELECT id, name, surname, profileImageName FROM users WHERE id = ${req.body.id}`;
   connection.query(query, (err, result) => {
     if (err) return new Error(err);
     res.send(result);

@@ -1,4 +1,4 @@
-import { Send } from '@material-ui/icons';
+import { SendTwoTone } from '@material-ui/icons';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
@@ -12,11 +12,13 @@ const ChatBoxForm = styled.form`
   justify-content: center;
 `;
 const ChatMessageTextarea = styled(StyledInput)`
-  height: 80%;
-  width: 80%;
+  width: 70%;
+  height: 30px;
   resize: none;
   border-radius: 5px;
-  background-color: ${({ theme }) => theme.colors.grey};
+  font-size: ${({ theme }) => theme.fontSize.m};
+  padding: 8px 5px;
+  background-color: ${({ theme }) => theme.colors.navy};
   color: ${({ theme }) => theme.colors.white};
   &::placeholder {
     color: ${({ theme }) => theme.colors.white};
@@ -30,33 +32,34 @@ const ChatMessageTextarea = styled(StyledInput)`
   }
 `;
 
-const StyledSendIcon = styled(Send)`
-  color: ${({ theme }) => theme.colors.purple};
-`;
-
 const Button = styled.button`
-  margin-left: 30px;
+  width: 40px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 15px;
+  border-radius: 15px;
   border: none;
   outline: none;
-  background-color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.yellow};
+  color: ${({ theme }) => theme.colors.navy};
 `;
 const ChatForm = () => {
   const { register, handleSubmit } = useForm();
 
   const { sendMessage } = useSocket();
-
-  const handleSendMessage = () => {};
   return (
     <ChatBoxForm onSubmit={handleSubmit(sendMessage)}>
       <ChatMessageTextarea
         as="textarea"
         name="message"
         id="message"
-        placeholder="Type message..."
+        placeholder="Write a message..."
         {...register('message')}
       />
       <Button type="submit">
-        <StyledSendIcon />
+        <SendTwoTone />
       </Button>
     </ChatBoxForm>
   );

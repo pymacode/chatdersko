@@ -40,6 +40,7 @@ export const SocketProvider = ({ children }) => {
   };
 
   const sendMessage = ({ message }, e) => {
+    e.target.reset();
     // FIXME Uncomment to save messages to DB
     // saveMessages({
     //   userID: user.id,
@@ -61,7 +62,6 @@ export const SocketProvider = ({ children }) => {
       })
     );
     scrollDown();
-    e.target.reset();
   };
 
   return (

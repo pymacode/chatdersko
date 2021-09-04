@@ -16,4 +16,8 @@ export const SearchBarWrapper = styled.div`
     height: 36px;
     color: ${({ theme }) => theme.colors.darkGrey};
   }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;

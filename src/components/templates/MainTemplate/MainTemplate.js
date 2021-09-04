@@ -5,13 +5,26 @@ import Header from 'components/organisms/Header/Header';
 import NewsSection from '../NewsSection/NewsSection';
 import Navigation from 'components/organisms/Navigation/Navigation';
 const MainTemplate = ({ children }) => {
+  const [width, setWidth] = React.useState(window.innerWidth);
+
+  React.useEffect(() => {
+    const handleWidthChange = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleWidthChange);
+
+    return function () {
+      window.removeEventListener('resize', handleWidthChange);
+    };
+  }, []);
   return (
     <Wrapper>
       <Header />
       <Navigation />
       <Components>
         {children}
-        <NewsSection />
+        {width < 1366 ? null : <NewsSection />}
       </Components>
     </Wrapper>
   );

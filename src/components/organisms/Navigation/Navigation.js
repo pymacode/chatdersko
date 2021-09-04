@@ -2,66 +2,85 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from 'hooks/useAuth';
+import { Home, Message, ExitToApp } from '@material-ui/icons';
 
 const Wrapper = styled.nav`
-  z-index: 10000;
+  z-index: 1000;
   position: absolute;
-  top: 80px;
+  top: 25%;
   left: 0px;
-  width: 200px;
-  height: calc(100% - 80px);
-  background-color: ${({ theme }) => theme.colors.strongerDefault};
+  width: 80px;
+  height: 50%;
+  border-radius: 15px;
+  background-color: ${({ theme }) => theme.colors.lightNavy};
   display: flex;
   flex-direction: column;
   align-items: center;
 
   transform: ${({ isOpen }) =>
-    isOpen ? 'translateX(0)' : 'translateX(-200px)'};
+    isOpen ? 'translateX(0)' : 'translateX(-80px)'};
   transition: transform 1s ease-in-out;
 
-  button {
-    position: absolute;
-    bottom: 10px;
-    background-color: ${({ theme }) => theme.colors.default};
-    color: ${({ theme }) => theme.colors.black};
-    cursor: pointer;
+  @media (min-width: 1366px) {
+    transform: unset;
   }
 `;
 
 const NavHandler = styled.div`
   position: absolute;
-  width: 60px;
-  height: 20px;
-  right: -40px;
-  top: 100px;
-  transform: rotate(90deg);
-  background-color: ${({ theme }) => theme.colors.purple};
-  color: ${({ theme }) => theme.colors.white};
-  text-align: center;
-  border-radius: 0 0 15px 15px;
-  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  top: 20px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  div {
+    width: 100%;
+    height: 3px;
+    background-color: ${({ theme }) => theme.colors.yellow};
+    border-radius: 15px;
+  }
+
+  @media (min-width: 1366px) {
+    display: none;
+  }
 `;
 
 const LogoutButton = styled.button`
-  width: 70%;
-  height: 25px;
-  background-color: red;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  bottom: 10px;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.navy};
+  background-color: ${({ theme }) => theme.colors.purple};
+  transform: rotate(-180deg);
   display: flex;
   justify-content: center;
   align-items: center;
   border: none;
-  border-radius: 15px;
+  border-radius: 50%;
   outline: none;
-  box-shadow: 1px 1px black;
+
+  @media (min-width: 1366px) {
+    width: 50px;
+    height: 25px;
+    border-radius: 15px;
+  }
 `;
 const activeClassName = 'active-link';
 const StyledLink = styled(NavLink).attrs({ activeClassName })`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  font-weight: bold;
   text-decoration: none;
-  color: ${({ theme }) => theme.colors.darkGrey};
-  text-align: right;
-  position: relative;
+  color: ${({ theme }) => theme.colors.navy};
+  background-color: ${({ theme }) => theme.colors.purple};
   margin-bottom: 15px;
 
   &:first-of-type {
@@ -69,21 +88,15 @@ const StyledLink = styled(NavLink).attrs({ activeClassName })`
   }
 
   &.${activeClassName} {
-    &::after {
-      opacity: 1;
-    }
+    color: ${({ theme }) => theme.colors.navy};
+    background-color: ${({ theme }) => theme.colors.yellow};
+    transition: background-color 0.5s ease-in-out;
   }
-  &::after {
-    opacity: 0;
-    transition: opacity 0.4s ease-in-out;
-    content: '';
-    width: 30px;
-    height: 5px;
-    background-color: ${({ theme }) => theme.colors.purple};
-    position: absolute;
-    right: -40px;
-    top: 50%;
-    transform: translateY(-50%);
+
+  @media (min-width: 1366px) {
+    width: 50px;
+    height: 25px;
+    border-radius: 15px;
   }
 `;
 
@@ -93,14 +106,24 @@ const Navigation = () => {
 
   const handleNavControl = () => setIsOpen((prevState) => !prevState);
   return (
-    <Wrapper isOpen={isOpen}>
-      <NavHandler onClick={handleNavControl}>Menu</NavHandler>
-      <StyledLink exact to="/">
-        Home
-      </StyledLink>
-      <StyledLink to="/chat">Chat</StyledLink>
-      <LogoutButton onClick={auth.signOut}>Sign out</LogoutButton>
-    </Wrapper>
+    <>
+      <NavHandler onClick={handleNavControl}>
+        <div />
+        <div />
+        <div />
+      </NavHandler>
+      <Wrapper isOpen={isOpen}>
+        <StyledLink exact to="/" onClick={handleNavControl}>
+          <Home />
+        </StyledLink>
+        <StyledLink to="/chat" onClick={handleNavControl}>
+          <Message />
+        </StyledLink>
+        <LogoutButton onClick={auth.signOut}>
+          <ExitToApp />
+        </LogoutButton>
+      </Wrapper>
+    </>
   );
 };
 

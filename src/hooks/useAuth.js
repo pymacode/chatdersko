@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
       }
     })();
   }, []);
+
   const signIn = async ({ email, password }) => {
     try {
       const response = await axios.post('http://localhost:6060/login', {
