@@ -3,15 +3,29 @@ import PropTypes from 'prop-types';
 import MainTemplate from 'components/templates/MainTemplate/MainTemplate';
 import Messages from './Chat';
 import { Switch, Route } from 'react-router-dom';
+import Home from './Home';
 const AuthenticatedApp = () => {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   return (
     <MainTemplate>
       <Switch>
         <Route path="/chat">
-          <Messages text="chat" />
+          <Messages />
         </Route>
         <Route path="/">
-          <h1>You are at /</h1>
+          <Home />
         </Route>
       </Switch>
     </MainTemplate>

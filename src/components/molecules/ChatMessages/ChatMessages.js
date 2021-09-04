@@ -1,5 +1,4 @@
 import { useAuth } from 'hooks/useAuth';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { useGetMessagesMutation } from 'store';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,17 +7,12 @@ import { addMessages } from 'store';
 
 const ChatBoxMessages = styled.div`
   width: 100%;
-  height: 80%;
-  max-height: 700px;
+  height: 75%;
   padding-top: 10px;
   display: flex;
-  box-sizing: border-box;
   flex-direction: column;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.lightBlack};
-  border-right: 3px solid ${({ theme }) => theme.colors.white};
   overflow-y: scroll;
-  background-color: ${({ theme }) => theme.colors.default};
-
+  background-color: ${({ theme }) => `${theme.colors.navyRGB}0.8)`};
   //hide scrollbar
   &::-webkit-scrollbar {
     display: none;
@@ -26,25 +20,38 @@ const ChatBoxMessages = styled.div`
   -ms-overflow-style: none;
   scrollbar-width: none;
   //hide scrollbar -- end
+
+  @media screen and (min-width: 1366px) {
+    height: 90%;
+  }
 `;
 
 const MessageBox = styled.div`
-  max-width: 270px;
-  min-width: 270px;
-  min-height: 70px;
+  position: relative;
+  width: 150px;
+  max-width: 150px;
+  min-height: 40px;
   border-radius: 15px;
-  padding: 5px 10px;
-  background-color: ${({ theme, isSender }) =>
-    isSender ? theme.colors.black : theme.colors.white};
-  color: ${({ theme, isSender }) =>
-    isSender ? theme.colors.white : theme.colors.black};
   margin: 5px 15px;
+  padding: 5px 10px;
+  font-style: italic;
+  font-size: ${({ theme }) => theme.fontSize.m};
+  background-color: ${({ theme, isSender }) =>
+    isSender
+      ? `${theme.colors.purpleRGB}0.5)`
+      : `${theme.colors.purpleRGB}0.7)`};
+  color: ${({ theme, isSender }) =>
+    isSender ? 'rgba(255, 255, 255, 0.7)' : theme.colors.navy};
   align-self: ${({ isSender }) => (isSender ? 'flex-end' : 'flex-start')};
 `;
 
-const Message = ({ children, isSender }) => {
-  return <MessageBox isSender={isSender}>{children}</MessageBox>;
-};
+const MessageSender = styled.div`
+  position: absolute;
+  top: -15px;
+  left: 10px;
+  font-size: 12px;
+  color: ${({ theme }) => `${theme.colors.yellowRGB}0.5)`};
+`;
 
 const ChatMessages = () => {
   const messages = useSelector((state) => state.messages);
@@ -52,7 +59,6 @@ const ChatMessages = () => {
   const auth = useAuth();
   const [getMessages] = useGetMessagesMutation();
   const dispatch = useDispatch();
-
   React.useEffect(async () => {
     try {
       if (!activeFriend) return;
@@ -80,12 +86,17 @@ const ChatMessages = () => {
         messages.map((message) => {
           if (message.senderID === auth.user.id) {
             return (
-              <Message key={message.id} isSender>
+              <MessageBox key={message.id} isSender>
                 {message.content}
-              </Message>
+              </MessageBox>
             );
           } else {
-            return <Message key={message.id}>{message.content}</Message>;
+            return (
+              <MessageBox key={message.id}>
+                <MessageSender>{activeFriend.name}</MessageSender>
+                {message.content}
+              </MessageBox>
+            );
           }
         })
       ) : (
@@ -93,11 +104,6 @@ const ChatMessages = () => {
       )}
     </ChatBoxMessages>
   );
-};
-
-Message.propTypes = {
-  children: PropTypes.any,
-  isSender: PropTypes.any,
 };
 
 export default ChatMessages;

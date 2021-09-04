@@ -1,8 +1,10 @@
 import { createGlobalStyle } from 'styled-components';
 export const GlobalStyle = createGlobalStyle`
 
-html {
+html,
+body {
     box-sizing: border-box;
+    background-color: #2A0944;
   }
   
   *, *::after, *::before {
@@ -13,7 +15,6 @@ html {
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
-    overflow-y: hidden;
   }
 
 
