@@ -1,4 +1,4 @@
-### Chatdersko - full-stack real time chat app with private messages
+# Chatdersko - full-stack real time chat app with private messages
 #### App created using create-react-app
 ##### Use these credentials to sign in into app: (email) (password)
 
