@@ -1,16 +1,7 @@
-import NewFriends from 'components/molecules/NewFriends/NewFriends';
+import NewFriends from 'components/organisms/NewFriends/NewFriends';
 import Profile from 'components/molecules/Profile/Profile';
 import React from 'react';
-import styled from 'styled-components';
-
-const Wrapper = styled.div`
-  width: 45%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-`;
+import { Wrapper } from './UserDashboard.styles';
 const UserDashboard = () => {
   return (
     <Wrapper>

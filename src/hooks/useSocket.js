@@ -2,21 +2,24 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { io } from 'socket.io-client';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateMessages, setUnreadMessage } from 'store';
-import { useSaveMessagesMutation, store } from 'store';
+import { updateMessages, addUnreadMessage } from 'store';
+import { store } from 'store';
+import { useUpdateUnreadMessagesMutation } from 'store';
 
 const SocketContext = React.createContext({});
 
 export const SocketProvider = ({ children }) => {
-  const socket = io('http://localhost:6060');
-  const messages = useSelector((state) => state.messages);
+  const socket = io(`${process.env.REACT_APP_SERVER_URL}`, {
+    transports: ['websocket', 'polling'],
+  });
   const { activeFriend } = useSelector((state) => state.friends);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const [saveMessages] = useSaveMessagesMutation();
+  const [updateUnreadMessages] = useUpdateUnreadMessagesMutation();
 
   socket.on('newmsg', (data) => {
     const aFriend = store.getState().friends.activeFriend;
+    console.log(aFriend);
     if (aFriend && aFriend.id === data.sender) {
       dispatch(
         updateMessages({
@@ -26,7 +29,11 @@ export const SocketProvider = ({ children }) => {
       );
       scrollDown();
     } else {
-      dispatch(setUnreadMessage({ from: data.sender }));
+      dispatch(addUnreadMessage({ from: data.sender, to: data.reciever }));
+      updateUnreadMessages({
+        id: data.reciever,
+        messages: store.getState().unreadMessages,
+      });
     }
   });
 

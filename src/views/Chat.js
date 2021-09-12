@@ -20,6 +20,7 @@ const Wrapper = styled.div`
   @media (min-width: 1366px) {
     width: 60%;
     height: 80%;
+    max-height: 80%;
     flex-direction: row;
   }
 `;

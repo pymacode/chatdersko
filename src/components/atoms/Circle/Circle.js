@@ -5,8 +5,6 @@ import { CircleDiv } from './Circle.styles';
 const defaultAvatarUrl =
   'https://www.pngfind.com/pngs/m/42-428449_anonymous-avatar-face-book-hd-png-download.png';
 
-// const defaultAvatarUrl = 'http://localhost:6060/getImage';
-
 const Circle = ({ imgUrl = defaultAvatarUrl }) => {
   return (
     <CircleDiv>

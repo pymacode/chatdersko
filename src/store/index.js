@@ -34,6 +34,27 @@ const massagingSystemApi = createApi({
       }),
       providesTags: ['Friends'],
     }),
+    updateUnreadMessages: builder.mutation({
+      query: (body) => ({
+        url: 'update-unread',
+        method: 'POST',
+        body,
+      }),
+    }),
+    acceptFriendRequest: builder.mutation({
+      query: (body) => ({
+        url: 'accept-friend',
+        method: 'POST',
+        body,
+      }),
+    }),
+    declineFriendRequest: builder.mutation({
+      query: (body) => ({
+        url: 'decline-friend',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
@@ -88,8 +109,11 @@ const unreadMessagesSlice = createSlice({
   name: 'unreadMessages',
   initialState: [],
   reducers: {
-    setUnreadMessage: {
+    addUnreadMessage: {
       reducer: (state, action) => [...state, action.payload],
+    },
+    setUnreadMessages: {
+      reducer: (state, action) => (state = action.payload),
     },
     removeUnreadMessage: {
       reducer: (state, action) => {
@@ -109,19 +133,32 @@ const userSlice = createSlice({
     removeUser: {
       reducer: (state) => (state = null),
     },
+    removeFriendRequest: {
+      reducer: (state, action) => {
+        state.invitations = JSON.stringify(
+          JSON.parse(state.invitations).filter(
+            (inv) => inv.id != action.payload
+          )
+        );
+        return state;
+      },
+    },
   },
 });
 
 export const { addFriends, setActiveFriend, clearState } = friendsSlice.actions;
 export const { addMessages, updateMessages } = messagesSlice.actions;
-export const { setUser, removeUser } = userSlice.actions;
-export const { setUnreadMessage, removeUnreadMessage } =
+export const { setUser, removeUser, removeFriendRequest } = userSlice.actions;
+export const { setUnreadMessages, removeUnreadMessage, addUnreadMessage } =
   unreadMessagesSlice.actions;
 
 export const {
   useGetMessagesMutation,
   useGetFriendsMutation,
   useSaveMessagesMutation,
+  useUpdateUnreadMessagesMutation,
+  useAcceptFriendRequestMutation,
+  useDeclineFriendRequestMutation,
 } = massagingSystemApi;
 
 export const store = configureStore({

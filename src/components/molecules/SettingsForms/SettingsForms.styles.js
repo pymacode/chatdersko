@@ -17,6 +17,18 @@ export const StyledInput = styled(Input)`
   margin: 0 5px;
   font-size: 12px;
   background-color: ${({ theme }) => theme.colors.navy};
+  color: ${({ theme }) => theme.colors.white};
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.white};
+    opacity: 1;
+  }
+  &:-ms-input-placeholder {
+    color: ${({ theme }) => theme.colors.white};
+  }
+  &::-ms-input-placeholder {
+    color: ${({ theme }) => theme.colors.white};
+  }
 `;
 
 export const FormButton = styled.button`
