@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const path = require('path');
 const httpServer = require('http').createServer(app);
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
@@ -31,49 +30,135 @@ io.on('connection', (socket) => {
   socket.emit('message', 'hello');
 
   socket.on('user-refresh', (data) => {
-    axios.post('http://localhost:6060/update-user', {
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/update-user`, {
       id: data.id,
       isOnline: true,
       socket: socket.id,
     });
   });
 
-  socket.on('user-closed-tab', (data) => {
-    console.log(data);
-  });
-
   socket.on('msg', (data) => {
-    // console.log(data);
-    const query = `SELECT users.socket FROM users WHERE id='${data.reciever}'`;
+    const query = `SELECT users.socket, users.isOnline, users.unreadMessages FROM users WHERE id='${data.reciever}'`;
     connection.query(query, (err, result) => {
       if (err) return new Error(err);
-      // console.log(result[0].socket);
       socket.to(result[0].socket).emit('newmsg', data);
+      if (!result[0].isOnline) {
+        socket.to(result[0].socket).emit('newmsg', data);
+
+        let parsedUnread = JSON.parse(result[0].unreadMessages);
+        if (parsedUnread && parsedUnread.length > 0) {
+          parsedUnread.push({ from: data.sender, to: data.reciever });
+        } else {
+          parsedUnread = [{ from: data.sender, to: data.reciever }];
+        }
+        const query = `UPDATE users SET unreadMessages='${JSON.stringify(
+          parsedUnread
+        )}' WHERE id='${data.reciever}'`;
+        connection.query(query, (err, result) => {
+          if (err) return new Error(err);
+        });
+      }
     });
   });
 });
 
-app.get('/getImage/:id/:filename', (req, res) => {
-  const options = {
-    root: path.join(__dirname, 'public'),
-    dotfiles: 'deny',
-    headers: {
-      'x-timestamp': Date.now(),
-      'x-sent': true,
-    },
-  };
-  if (!req.params.id || !req.params.filename) return;
-  const query = `SELECT profileImageName FROM users WHERE id='${req.params.id}'`;
+app.get('/all-users', (req, res) => {
+  connection.query(
+    'SELECT id, name, surname FROM users WHERE 1',
+    (err, result) => {
+      if (err) throw Error('error');
+      res.send(result);
+    }
+  );
+});
+
+app.post('/accept-friend', (req, res) => {
+  const query = 'INSERT INTO friends (friendID, userID) VALUES (?,?)';
+  connection.query(
+    query,
+    [req.body.friendID, req.body.userID],
+    (err, result) => {
+      if (err) throw Error('error');
+    }
+  );
+});
+app.post('/decline-friend', (req, res) => {
+  const query = 'UPDATE users SET invitations = ? WHERE id = ?';
+  connection.query(
+    query,
+    [req.body.invitations, req.body.userID],
+    (err, result) => {
+      if (err) throw Error('error');
+      console.log(result);
+    }
+  );
+});
+
+app.post('/change-password', (req, res) => {
+  if (req.body.id && req.body.currentPassword && req.body.newPassword) {
+    const query = 'UPDATE users SET password=? WHERE id = ? AND password = ?';
+    connection.query(
+      query,
+      [req.body.newPassword, req.body.id, req.body.currentPassword],
+      (err, result) => {
+        if (err) throw Error('Error');
+        if (result.changedRows > 0) {
+          res.sendStatus(200);
+        } else {
+          res.sendStatus(201);
+        }
+      }
+    );
+  } else {
+    res.sendStatus(404);
+  }
+});
+
+app.post('/change-email', (req, res) => {
+  if (req.body.id && req.body.currentEmail && req.body.newEmail) {
+    const query = 'UPDATE users SET email=? WHERE id = ? AND email = ?';
+    connection.query(
+      query,
+      [req.body.newEmail, req.body.id, req.body.currentEmail],
+      (err, result) => {
+        if (err) throw Error('Error');
+        if (result.changedRows > 0) {
+          res.sendStatus(200);
+        } else {
+          res.sendStatus(201);
+        }
+      }
+    );
+  } else {
+    res.sendStatus(404);
+  }
+});
+app.post('/change-name', (req, res) => {
+  if (req.body.id && req.body.newFirstName && req.body.newLastName) {
+    const query = 'UPDATE users SET name=?, surname=? WHERE id = ?';
+    connection.query(
+      query,
+      [req.body.newFirstName, req.body.newLastName, req.body.id],
+      (err, result) => {
+        if (err) throw Error('Error');
+        if (result.changedRows > 0) {
+          res.sendStatus(200);
+        } else {
+          res.sendStatus(201);
+        }
+      }
+    );
+  } else {
+    res.sendStatus(404);
+  }
+});
+
+app.post('/update-unread', (req, res) => {
+  const query = `UPDATE users SET unreadMessages='${JSON.stringify(
+    req.body.messages
+  )}' WHERE id='${req.body.id}'`;
   connection.query(query, (err, result) => {
     if (err) return new Error(err);
-    if (
-      result.length === 0 ||
-      result[0].profileImageName !== req.params.filename
-    ) {
-      res.sendStatus(403);
-    } else {
-      res.sendFile(`/images/${req.params.id}/${req.params.filename}`, options);
-    }
   });
 });
 
@@ -86,7 +171,6 @@ app.post('/save-messages', (req, res) => {
       const queryIns = `INSERT INTO messages (userID, friendID, messages) VALUES (${req.body.userID}, ${req.body.friendID}, '${req.body.messages}')`;
       connection.query(queryIns, (err, result) => {
         if (err) return new Error(err);
-        console.log(result);
       });
     }
     res.send('success');
@@ -113,7 +197,7 @@ app.post('/messages', (req, res) => {
 
 app.post('/login', (req, res) => {
   if (!req.body.email && !req.body.password) return;
-  const query = `SELECT id, name, surname, profileImageName FROM users WHERE email='${req.body.email}' && password='${req.body.password}'`;
+  const query = `SELECT id, name, surname, profileImageName, unreadMessages, invitations FROM users WHERE email='${req.body.email}' && password='${req.body.password}'`;
   connection.query(query, (err, result) => {
     if (err) return new Error(err);
     if (result.length === 0) return new Error('No user');
@@ -133,27 +217,11 @@ app.post('/friends', (req, res) => {
 
 app.post('/user', (req, res) => {
   if (!req.body.id) return;
-  const query = `SELECT id, name, surname, profileImageName FROM users WHERE id = ${req.body.id}`;
+  const query = `SELECT id, name, surname, profileImageName, unreadMessages, invitations FROM users WHERE id = ${req.body.id}`;
   connection.query(query, (err, result) => {
     if (err) return new Error(err);
     res.send(result);
   });
-});
-
-app.get('/news', (req, res) => {
-  const query = 'SELECT * FROM news ';
-
-  connection.connect((e) => {
-    if (e) throw new Error('Connection failed');
-    console.log('Connected');
-  });
-
-  connection.query(query, (err, result) => {
-    if (err) return new Error(err);
-    res.send(result);
-  });
-
-  connection.end();
 });
 
 httpServer.listen(6060, 'localhost', () => {

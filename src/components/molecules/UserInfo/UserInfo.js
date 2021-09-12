@@ -7,13 +7,7 @@ import Label from 'components/atoms/Label/Label';
 const UserInfo = ({ user = {}, onClick, isSmall, isDark }) => {
   return (
     <UserInfoWrapper onClick={onClick} isOnline={user.isOnline}>
-      {user.profileImageName !== '' ? (
-        <Circle
-          imgUrl={`http://localhost:6060/getImage/${user.id}/${user.profileImageName}`}
-        />
-      ) : (
-        <Circle />
-      )}
+      <Circle />
       <Label
         isSmall={isSmall}
         isDark={isDark}

@@ -26,8 +26,9 @@ const ChangeAvatarForm = () => {
         name="avatar"
         style={{ display: 'none' }}
         onChange={handleValueChange}
+        disabled
       />
-      <StyledFileInput>
+      <StyledFileInput disabled>
         <InsertDriveFile onClick={handleRealInput} />
         {file ? (
           <StyledFileName>{file.replace(/^.*\\/, '')}</StyledFileName>
@@ -35,8 +36,8 @@ const ChangeAvatarForm = () => {
           <StyledFileName>select file</StyledFileName>
         )}
       </StyledFileInput>
-      <StyledInput placeholder="password" />
-      <FormButton>Upload</FormButton>
+      <StyledInput placeholder="password" disabled />
+      <FormButton disabled>Upload</FormButton>
     </SingleFormWrapper>
   );
 };

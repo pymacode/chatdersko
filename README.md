@@ -2,7 +2,6 @@
 
 Project created with Create React App.
 
-
 # After git clone
 
 run `npm install` to get dependencies.

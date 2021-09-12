@@ -3,25 +3,36 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { useSocket } from './useSocket';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearState } from 'store';
+import { clearState, setUnreadMessages, addFriends } from 'store';
 import { setUser, removeUser } from 'store';
+import { useGetFriendsMutation } from 'store';
 const AuthContext = React.createContext({});
 
 export const AuthProvider = ({ children }) => {
-  // const [user, setUser] = useState(null);
   const user = useSelector((state) => state.user);
   const token = sessionStorage.getItem('token');
   const userID = sessionStorage.getItem('userID');
   const { socket } = useSocket();
+  const [getFriends] = useGetFriendsMutation();
   const dispatch = useDispatch();
   useEffect(() => {
     if (!token || !userID) return;
     (async () => {
       try {
-        const response = await axios.post('http://localhost:6060/user', {
-          id: `${userID}`,
-        });
+        const response = await axios.post(
+          `${process.env.REACT_APP_SERVER_URL}/user`,
+          {
+            id: `${userID}`,
+          }
+        );
+        const { data } = await getFriends({ id: response.data[0].id });
+        dispatch(addFriends(data));
         dispatch(setUser(response.data[0]));
+        if (response.data[0].unreadMessages) {
+          dispatch(
+            setUnreadMessages(JSON.parse(response.data[0].unreadMessages))
+          );
+        }
         socket.emit('user-refresh', response.data[0]);
       } catch (e) {
         console.log(e);
@@ -31,14 +42,24 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = async ({ email, password }) => {
     try {
-      const response = await axios.post('http://localhost:6060/login', {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/login`,
+        {
+          email,
+          password,
+        }
+      );
+      const { data } = await getFriends({ id: response.data[0].id });
+      dispatch(addFriends(data));
       dispatch(setUser(response.data[0]));
+      if (response.data[0].unreadMessages) {
+        dispatch(
+          setUnreadMessages(JSON.parse(response.data[0].unreadMessages))
+        );
+      }
       sessionStorage.setItem('token', response.data[0].token);
       sessionStorage.setItem('userID', response.data[0].id);
-      axios.post('http://localhost:6060/update-user', {
+      axios.post(`${process.env.REACT_APP_SERVER_URL}/update-user`, {
         id: response.data[0].id,
         isOnline: true,
         socket: socket.id,
@@ -49,7 +70,7 @@ export const AuthProvider = ({ children }) => {
   };
   const signOut = async () => {
     await axios
-      .post('http://localhost:6060/update-user', {
+      .post(`${process.env.REACT_APP_SERVER_URL}/update-user`, {
         id: user.id,
         isOnline: false,
         socket: 'null',

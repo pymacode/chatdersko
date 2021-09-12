@@ -1,0 +1,11 @@
+{
+    "name": "Chatdersko",
+    "short_name": "Chatdersko",
+    "icons": [{
+        "src": "android-chrome-512x512.png",
+        "sizes": "512x512"
+    }],
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "display": "fullscreen"
+}
