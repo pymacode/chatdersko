@@ -2,8 +2,8 @@
 #### App created using create-react-app
 ##### Use these credentials to sign in into app: (email) (password)
 
-* (adamkowalski@me.me) (adamkowalski)
-* (dominikkowalski@me.me) (dominikkowalski)
+* (adamkowalski@me.me) (qwerty123456)
+* (dominikkowalski@me.me) (qwerty123456)
 
 **[Chatdersko Live](https://nifty-shannon-5c4118.netlify.app/)**
 
