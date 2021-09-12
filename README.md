@@ -5,7 +5,8 @@
 * (adamkowalski@me.me) (qwerty123456)
 * (dominikkowalski@me.me) (qwerty123456)
 
-**[Chatdersko Live](https://nifty-shannon-5c4118.netlify.app/)**
+<h1 align="center">[Chatdersko Live](https://nifty-shannon-5c4118.netlify.app/)</h1>
+
 
 ### Used libaries and my experiences
 ###### What have I learned while creating the app? ( basics/junior )
