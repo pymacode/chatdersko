@@ -1,13 +1,15 @@
-### Chatdersko - full-stack real time chat app with private messages
+
+# Chatdersko - full-stack real time chat app with private messages
 
 #### App created using create-react-app
 
 ##### Use these credentials to sign in into app: (email) (password)
 
-- (adamkowalski@me.me) (adamkowalski)
-- (dominikkowalski@me.me) (dominikkowalski)
+* (adamkowalski@me.me) (qwerty123456)
+* (dominikkowalski@me.me) (qwerty123456)
 
-<h1 align="center" ><a href="https://nifty-shannon-5c4118.netlify.app">Chatdersko Live</a></h1>
+<h1 align="center"><a href="https://nifty-shannon-5c4118.netlify.app">Chatdersko Live</a></h1>
+
 
 ### Used libaries and my experiences
 
