@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateMessages, addUnreadMessage } from 'store';
 import { store } from 'store';
 import { useUpdateUnreadMessagesMutation } from 'store';
+import { useSaveMessagesMutation } from 'store';
 
 const SocketContext = React.createContext({});
 
@@ -16,10 +17,11 @@ export const SocketProvider = ({ children }) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [updateUnreadMessages] = useUpdateUnreadMessagesMutation();
+  const [saveMessages] = useSaveMessagesMutation();
+  const messages = useSelector((state) => state.messages);
 
   socket.on('newmsg', (data) => {
     const aFriend = store.getState().friends.activeFriend;
-    console.log(aFriend);
     if (aFriend && aFriend.id === data.sender) {
       dispatch(
         updateMessages({
@@ -48,15 +50,14 @@ export const SocketProvider = ({ children }) => {
 
   const sendMessage = ({ message }, e) => {
     e.target.reset();
-    // FIXME Uncomment to save messages to DB
-    // saveMessages({
-    //   userID: user.id,
-    //   friendID: activeFriend.id,
-    //   messages: JSON.stringify([
-    //     ...messages,
-    //     { id: messages.length + 1, senderID: user.id, content: message },
-    //   ]),
-    // });
+    saveMessages({
+      userID: user.id,
+      friendID: activeFriend.id,
+      messages: JSON.stringify([
+        ...messages,
+        { id: messages.length + 1, senderID: user.id, content: message },
+      ]),
+    });
     socket.emit('msg', {
       sender: user.id,
       reciever: activeFriend.id,
